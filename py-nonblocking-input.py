@@ -4,7 +4,13 @@ import time
 from typing import Union, List
 
 
-class __NonBlocking:
+class NonBlocking:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(NonBlocking, cls).__new__(cls)
+        return cls._instance
 
     def __init__(self):
         self.__paused = False
@@ -50,9 +56,14 @@ class __NonBlocking:
 
 
 if __name__ == '__main__':
-    u = __NonBlocking()
+    u = NonBlocking()
+    y = NonBlocking()
 
     cnt = 0
     while True:
         time.sleep(0.5)
+        cnt = cnt + 1
         print('u: ' + str(u.get_all_input()))
+        print('y: ' + str(y.get_all_input()))
+        if cnt == 3:
+            exit(44)
