@@ -22,7 +22,9 @@ u = NonBlockingStdIn()
 ```python
 u.kill()
 ```
-- Does not enforce the fact that only a single instance should ever exist
+- Does not enforce the fact that only a single instance should ever exist (at once)
+    - Properly killing an old instance and then creating a new one is fine
+    - Its singleton nature may be realized in code in a future commit
 ```python
 a = NonBlockingStdIn()
 b = NonBlockingStdIn()
