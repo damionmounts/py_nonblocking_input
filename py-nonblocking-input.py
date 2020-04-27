@@ -1,27 +1,24 @@
-import copy
 import threading
 import time
 from typing import Union, List
 
 
 class NonBlocking:
-    _instance = None
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(NonBlocking, cls).__new__(cls)
-        return cls._instance
 
     def __init__(self):
+        self.__running = True
         self.__paused = False
         self.__lines = []
+        self.__thread = threading.Thread(target=self.__input_collector)
+        self.__thread.daemon = True
+        self.__thread.start()
 
-        collector = threading.Thread(target=self.collect_input)
-        collector.start()
-
-    def collect_input(self) -> None:
-        while True:
-            line = input()
+    def __input_collector(self) -> None:
+        while self.__running:
+            try:
+                line = input()
+            except EOFError:
+                continue
             while self.__paused:
                 pass
             self.__lines.append(line)
@@ -37,7 +34,7 @@ class NonBlocking:
         self.__paused = False
         return line
 
-    def available_lines(self) -> int:
+    def num_available_lines(self) -> int:
         self.__paused = True
         amount = len(self.__lines)
         self.__paused = False
@@ -49,21 +46,40 @@ class NonBlocking:
         if len(self.__lines) == 0:
             lines = None
         else:
-            lines = copy.deepcopy(self.__lines)
+            lines = self.__lines
+            self.__lines = []
 
         self.__paused = False
         return lines
 
+    def kill(self):
+        self.__running = False
+        print('Please hit enter')
+        self.__thread.join()
+
 
 if __name__ == '__main__':
     u = NonBlocking()
-    y = NonBlocking()
 
     cnt = 0
     while True:
         time.sleep(0.5)
         cnt = cnt + 1
         print('u: ' + str(u.get_all_input()))
-        print('y: ' + str(y.get_all_input()))
-        if cnt == 3:
-            exit(44)
+        if cnt == 5:
+            break
+
+    u.kill()
+
+    print('u killed')
+    u = NonBlocking()
+
+    cnt = 0
+    while True:
+        time.sleep(0.5)
+        cnt = cnt + 1
+        print('u: ' + str(u.get_all_input()))
+        if cnt == 5:
+            break
+
+    u.kill()
