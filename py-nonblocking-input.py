@@ -1,11 +1,13 @@
+from typing import Union, List
 import threading
 import time
-from typing import Union, List
 
 
-class NonBlocking:
+# Spawns a thread on creation that automatically pulls and stores input
+class NonBlockingStdIn:
 
-    def __init__(self):
+    def __init__(self, line_limit: Union[int, None] = None) -> None:
+        self.__line_limit = line_limit
         self.__running = True
         self.__paused = False
         self.__lines = []
@@ -15,13 +17,14 @@ class NonBlocking:
 
     def __input_collector(self) -> None:
         while self.__running:
-            try:
-                line = input()
-            except EOFError:
-                continue
-            while self.__paused:
-                pass
-            self.__lines.append(line)
+            if len(self.__lines) < (self.__line_limit or float('inf')):
+                try:
+                    line = input()
+                except EOFError:
+                    continue
+                while self.__paused:
+                    pass
+                self.__lines.append(line)
 
     def input(self) -> Union[str, None]:
         self.__paused = True
@@ -52,34 +55,23 @@ class NonBlocking:
         self.__paused = False
         return lines
 
+    #
     def kill(self):
         self.__running = False
-        print('Please hit enter')
+        print('Please hit [ENTER]')
         self.__thread.join()
 
 
+# Main entry point
 if __name__ == '__main__':
-    u = NonBlocking()
+    u = NonBlockingStdIn(line_limit=4)
 
     cnt = 0
     while True:
         time.sleep(0.5)
         cnt = cnt + 1
         print('u: ' + str(u.get_all_input()))
-        if cnt == 5:
-            break
-
-    u.kill()
-
-    print('u killed')
-    u = NonBlocking()
-
-    cnt = 0
-    while True:
-        time.sleep(0.5)
-        cnt = cnt + 1
-        print('u: ' + str(u.get_all_input()))
-        if cnt == 5:
+        if cnt == 55:
             break
 
     u.kill()
