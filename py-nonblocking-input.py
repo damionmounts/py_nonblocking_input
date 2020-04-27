@@ -76,16 +76,24 @@ class NonBlockingStdIn:
         self.__thread.join()
 
 
-# Main entry point
-if __name__ == '__main__':
-    u = NonBlockingStdIn(line_limit=1)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# Usage example entry point
+if __name__ == '__main__':
+
+    # Setup non-blocking input at start of program
+    u = NonBlockingStdIn()
+
+    # 10s Demo
+    # Prints array of lines collected each second
     cnt = 0
     while True:
-        time.sleep(0.5)
+        time.sleep(1)
         cnt = cnt + 1
         print('u: ' + str(u.get_all_lines()))
-        if cnt == 55:
+        if cnt == 10:
             break
 
+    # Kill non-blocking input to free input()
     u.kill()
+    exit(0)
