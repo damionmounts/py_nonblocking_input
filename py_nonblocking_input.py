@@ -55,15 +55,12 @@ class NonBlockingStdIn:
         self.__paused = False
         return amount
 
-    # Returns all lines current in the buffer, None if empty
-    def get_all_lines(self) -> Union[List[str], None]:
+    # Returns all buffered lines and clears buffer
+    def get_all_lines(self) -> List[str]:
         self.__paused = True
 
-        if len(self.__lines) == 0:
-            lines = None
-        else:
-            lines = self.__lines
-            self.__lines = []
+        lines = self.__lines
+        self.__lines = []
 
         self.__paused = False
         return lines
