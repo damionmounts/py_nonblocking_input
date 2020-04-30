@@ -11,12 +11,11 @@ import time  # Used in testing
 # Singleton facilities may be implemented
 class NonBlockingStdIn:
 
-    # line_limit is None by default (infinity)
     # This sets the max amount of lines to be stored in lines[] at once
-    def __init__(self, line_limit: Union[int, None] = None) -> None:
+    def __init__(self, line_limit: int = 0) -> None:
 
         # Attributes are private to prevent severe turmoil
-        self.__line_limit = line_limit
+        self.__line_limit = abs(line_limit) or float('inf')
         self.__running = True
         self.__paused = False
         self.__lines = []
@@ -27,7 +26,7 @@ class NonBlockingStdIn:
     # Private process used by thread - collects input continuously
     def __input_collector(self) -> None:
         while self.__running:
-            if len(self.__lines) < (self.__line_limit or float('inf')):
+            if len(self.__lines) < self.__line_limit:
                 try:
                     line = input()
                 except EOFError:
