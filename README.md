@@ -10,7 +10,7 @@ Simple, cross-platform, pure Python way of reading stdin without blocking
 - Documented
 - Simple to use
 - Typed - as it brings more light to dynamic typed returns
-- Cross-platform (anything platform that can run a 2nd thread)
+- Cross-platform (any platform that can run a 2nd thread)
 - Pure Python
 
 #### Cons
