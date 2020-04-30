@@ -1,8 +1,6 @@
 from typing import Union, List  # Makes for expressive signatures
 import threading  # Allows input() to block a thread that isn't main
 
-import time  # Used in testing
-
 
 # Spawns a thread on creation that automatically pulls and stores input
 # Allows for a non-blocking input method that returns None when no content
@@ -65,26 +63,3 @@ class NonBlockingStdIn:
         self.__kill_flag.set()
         print('Please hit [ENTER]')
         self.__thread.join()
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# Usage example entry point
-if __name__ == '__main__':
-
-    # Setup non-blocking input at start of program
-    u = NonBlockingStdIn()
-
-    # 10s Demo
-    # Prints array of lines collected each second
-    cnt = 0
-    while True:
-        time.sleep(1)
-        cnt = cnt + 1
-        print('u: ' + str(u.get_all_lines()))
-        if cnt == 10:
-            break
-
-    # Kill non-blocking input to free input()
-    u.kill()
-    exit(0)
