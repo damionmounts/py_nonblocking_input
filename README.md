@@ -1,4 +1,4 @@
-# py-nonblocking-input
+# py_nonblocking_input
 Simple, cross-platform, pure Python way of reading stdin without blocking
 
 ---
